@@ -26,16 +26,18 @@ if($email != false && $password != false){
         if ($role_id == 3) {
           $getdatasql = "SELECT * FROM purchase_order WHERE user_id = {$user_id} LIMIT {$offset},{$limit_per_page}";
           $getdatasql_without_limit = "SELECT * FROM purchase_order WHERE user_id = {$user_id}";
-          $button_class = "display:none";
+          $role = "executive";
         } elseif($role_id == 1) {
           $getdatasql = "SELECT * FROM purchase_order LIMIT {$offset},{$limit_per_page}";
           $getdatasql_without_limit = "SELECT * FROM purchase_order";
-          $button_class = "";
+          $role = "hod";
+          
         }
         elseif($role_id == 2) {
           $getdatasql = "SELECT * FROM purchase_order LIMIT {$offset},{$limit_per_page}";
           $getdatasql_without_limit = "SELECT * FROM purchase_order";
-          $button_class = "";
+          $role = "manager";
+         
         }   
     }
 }else{
@@ -51,16 +53,33 @@ if($email != false && $password != false){
           <tr>
               <th>Product Name</th>
               <th>Price</th>
-              <th>Delete</th>
-              <th>Edit</th>
+              <th>Status</th>
+              <th>Created at</th>
+              <th>&nbsp</th>
           </tr>
       </thead>';
       $output .= "<tbody>";
 
       while($row = mysqli_fetch_assoc($result)) {
         
-        $output .= "<tr><td>{$row["product_name"]}</td><td> {$row["product_price"]}</td><td><button style='{$button_class}' class='delete-btn' data-id='{$row["id"]}'><i class='fa fa-trash-o' aria-hidden='true'></i></button></td><td><button style='{$button_class}' class='edit-btn' data-eid='{$row["id"]}'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></td></tr>";
+        $output .= "<tr>";
+        $output .= "<td>{$row["product_name"]}</td><td> {$row["product_price"]}</td>";
+
+        if ($row["is_approved"] == 1) {
+         $output .= "<td style='color:green;font-weight:bold'>Approved</td>";
+        } else {
+         $output .= "<td style='color:red';font-weight:bold'>Pending</td>";
+        }
+        $output .= "<td>{$row["created_at"]}</td>";
+
+        if ($role == "hod" || $role == "manager") {
+         $output .= "<td><button class='delete-btn' data-id='{$row["id"]}'><i class='fa fa-trash-o' aria-hidden='true'></i></button></td><td><button class='edit-btn' data-eid='{$row["id"]}'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></td>";
+        }
+      
+        $output .= "</tr>";
+
       }
+
       $output .= "</tbody>";
     $output .= "</table>";
 

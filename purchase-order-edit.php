@@ -31,12 +31,12 @@ if(mysqli_num_rows($result) > 0 ){
 
     $output .= "<div class='form-group'>
       <label for='product_name'>Product Name:</label>
-      <input type='text' class='form-control' id='product_name' value='{$row["product_name"]}'>
+      <input type='text' class='form-control' id='product_name_edit' value='{$row["product_name"]}'>
       <input  id='order_id' value='{$row["id"]}' hidden>
     </div>
     <div class='form-group'>
       <label for='product_price'>Product Price:</label>
-      <input type='number' class='form-control' id='product_price' value='{$row["product_price"]}'>
+      <input type='number' class='form-control' id='product_price_edit' value='{$row["product_price"]}'>
     </div>";
     if ($role_id == 1) {
      $checked = ($row["is_approved"] == 1) ? 'checked' : '';
@@ -50,7 +50,6 @@ if(mysqli_num_rows($result) > 0 ){
     $output .="<input type='submit' class='btn btn-primary' id='edit-submit' value='save'>";
 
   }
-
 
     echo $output;
 }else{

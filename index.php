@@ -9,6 +9,7 @@ if($email != false && $password != false){
         $fetch_info = mysqli_fetch_assoc($run_Sql);
         $status = $fetch_info['status'];
         $code = $fetch_info['code'];
+        $role_id = $fetch_info['user_role_id'];
 
         if($status == "verified"){
             if($code != 0){
@@ -99,9 +100,20 @@ if($email != false && $password != false){
 </nav>
 
 <h2 style="text-align: center;">Welcome <?php echo $fetch_info['name'] ?></h2>
-<h1 style="text-align: center;color:green">You are login as executive</h1>
+<h1 style="text-align: center;color:green">You are login as 
+<?php if ($role_id==1) {
+  echo "HOD";
+} elseif($role_id==2) {
+  echo "Manager";
+}else{
+  echo "Executive";
+}
+ ?></h1>
 
-<div class="save-order container">
+<?php 
+$output = "";
+if (!($role_id==1)) {
+ $output = '<div class="save-order container">
   <div class="form-group">
     <label for="product_name">Product Name:</label>
     <input type="text" class="form-control" placeholder="Enter Product Name" id="product_name">
@@ -111,7 +123,12 @@ if($email != false && $password != false){
     <input type="number" class="form-control" placeholder="Enter Product Price" id="product_price">
   </div>
   <input type="submit" class="btn btn-primary" id="save-button" value="Save">
-</div>
+</div>';
+}
+echo $output;
+
+?>
+
 <br>
 <div id="error-message"></div>
 <div id="success-message"></div>
@@ -211,9 +228,8 @@ if($email != false && $password != false){
      //Save Update order
       $(document).on("click","#edit-submit", function(){
         var order_id = $("#order_id").val();
-        var product_price = $("#product_price").val();
-        var product_name = $("#product_name").val();
-
+        var product_price = $("#product_price_edit").val();
+        var product_name = $("#product_name_edit").val();
         if ($('#is_approved').prop('checked')) {
          var is_approved = 1;
         }
