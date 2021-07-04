@@ -122,6 +122,12 @@ if (!($role_id==1)) {
     <label for="product_price">Product Price:</label>
     <input type="number" class="form-control" placeholder="Enter Product Price" id="product_price">
   </div>
+  <div>
+    <input type="text" id="captcha_input">
+    <img id="captcha_code" src="captcha_code.php" />
+    <button id="btnRefresh"">Refresh Captcha</button>
+  </div>
+  <br>
   <input type="submit" class="btn btn-primary" id="save-button" value="Save">
 </div>';
 }
@@ -253,24 +259,35 @@ echo $output;
         })
       });
 
+    
+
+      $("#btnRefresh").on("click",function(e){
+        $("#captcha_code").attr('src','captcha_code.php');
+      });
+
       // Insert New order
     $("#save-button").on("click",function(e){
       e.preventDefault();
         var product_price = $("#product_price").val();
         var product_name = $("#product_name").val();
-      if(product_price == "" || product_name == ""){
+        var captcha_input = $("#captcha_input").val();
+      if(product_price == "" || product_name == "" || captcha_input == ""){
         $("#error-message").html("All fields are required.").slideDown();
         $("#success-message").slideUp();
       }else{
         $.ajax({
           url: "purchase-order-insert.php",
           type : "POST",
-          data : {product_price:product_price, product_name: product_name},
+          data : {product_price:product_price, product_name: product_name,captcha_input:captcha_input},
           success : function(data){
             if(data == 1){
               $("#success-message").html("Saved successfully.").slideDown();
               loadPurchaseOrder();
-            }else{
+            }else if(data === 'captcha-error'){
+              $("#error-message").html("code not mached").slideDown();
+              
+            }
+            else{
               $("#error-message").html("Can't Save.").slideDown();
               
             }
@@ -282,6 +299,9 @@ echo $output;
     });
 
   });
+
+
+  i
   
 
 

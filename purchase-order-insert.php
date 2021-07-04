@@ -19,10 +19,16 @@ if($email != false && $password != false){
    header('Location: login-user.php');
 }
 
+$captcha_input = $_POST['captcha_input'];
+
+
+
 
 $product_price = $_POST["product_price"];
 $product_name = $_POST["product_name"];
 
+if($captcha_input == $_SESSION['captcha_code'])
+{
 
 $sql = "INSERT INTO purchase_order(product_price, product_name,user_id) VALUES ('{$product_price}','{$product_name}','{$user_id}')";
 
@@ -30,6 +36,9 @@ if(mysqli_query($con, $sql)){
   echo 1;
 }else{
   echo 0;
+}
+}else{
+  echo "captcha-error";
 }
 
 ?>
